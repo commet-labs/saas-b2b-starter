@@ -5,9 +5,17 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "clean": "turbo clean && rm -rf node_modules",
     "lint": "turbo lint",
-    "format-and-lint": "biome check .",
-    "format-and-lint:fix": "biome check . --write"
+    "lint:check": "biome check .",
+    "lint:fix": "biome check . --write",
+    "typecheck": "turbo typecheck",
+    "db:generate": "pnpm --filter @repo/database run generate",
+    "db:migrate": "pnpm --filter @repo/database run db:migrate",
+    "db:push": "pnpm --filter @repo/database run db:push",
+    "db:seed:fresh": "pnpm --filter @repo/database run db:seed:fresh",
+    "db:studio": "pnpm --filter @repo/database run db:studio",
+    "test": "pnpm --filter web test:run"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

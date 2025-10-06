@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@repo/database";
+import { db } from "@repo/database/connection";
 import { magicLink } from "better-auth/plugins";
 import { env } from "node:process";
 
