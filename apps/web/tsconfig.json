@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
+      "@repo/database": ["../../packages/database/src"],
       "@repo/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [
