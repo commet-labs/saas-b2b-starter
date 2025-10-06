@@ -1,11 +1,9 @@
 "use client";
 
-import { I18nProviderClient } from "@/locales/client";
-import { KeyboardShortcutProvider } from "@repo/ui/hooks/use-keyboard-shortcut";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
-import { DesktopProvider } from "./desktop-provider";
+import { I18nProviderClient } from "@/locales/client";
 
 type ProviderProps = {
   locale: string;
@@ -22,10 +20,7 @@ export function Providers({ locale, children }: ProviderProps) {
         disableTransitionOnChange
         enableColorScheme
       >
-        <KeyboardShortcutProvider>
-          <DesktopProvider />
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </KeyboardShortcutProvider>
+        <NuqsAdapter>{children}</NuqsAdapter>
       </NextThemesProvider>
     </I18nProviderClient>
   );
