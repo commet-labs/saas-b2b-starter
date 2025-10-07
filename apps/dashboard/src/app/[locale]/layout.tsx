@@ -4,7 +4,7 @@ import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "@repo/ui/globals.css";
 import { Toaster } from "@repo/ui/components/sonner";
 import type { Metadata } from "next";
-import { Providers } from "@/components/providers";
+import { Providers } from "@/modules/shared/components/providers";
 
 const fontSans = IBM_Plex_Sans({
   subsets: ["latin"],
