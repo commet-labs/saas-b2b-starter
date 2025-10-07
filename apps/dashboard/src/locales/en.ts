@@ -1,6 +1,4 @@
+import { authLocales } from "@/modules/auth/lib/locales/en";
 export default {
-  home: {
-    title: "Home",
-    description: "Home description",
-  },
+  ...authLocales,
 } as const;
