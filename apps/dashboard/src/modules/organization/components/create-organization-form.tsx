@@ -8,7 +8,7 @@ import { Label } from "@repo/ui/components/label";
 import { createOrganization } from "../actions/organization-action";
 
 export function CreateOrganizationForm() {
-  const t = useScopedI18n("settings.organization.create");
+  const t = useScopedI18n("organization.create");
   const [state, formAction, isPending] = useActionToast(createOrganization, {
     success: false,
     message: "",

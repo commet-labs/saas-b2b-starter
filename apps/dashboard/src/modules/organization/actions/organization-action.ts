@@ -12,24 +12,7 @@ import {
   member,
   organization as organizationTable,
 } from "@repo/database/schema";
-import {
-  CHECK_SLUG_AVAILABILITY,
-  CREATE_ORGANIZATION,
-  DELETE_ORGANIZATION,
-  UPDATE_BILLING_TIMEZONE_STRATEGY,
-  UPDATE_LATE_EVENTS_POLICY,
-  UPDATE_ORGANIZATION_LOGO,
-  UPDATE_ORGANIZATION_NAME,
-  UPDATE_ORGANIZATION_SLUG,
-  UPDATE_SEAT_PRORATION_DIRECTION,
-  UPDATE_SEAT_PRORATION_STRATEGY,
-  UPDATE_SEAT_ROUNDING_POLICY,
-  UPLOAD_ORGANIZATION_IMAGE,
-} from "@repo/utils/constants/actions";
-import { ORGANIZATIONS_TAG } from "@repo/utils/constants/tags";
-import { put } from "@vercel/blob";
 import { and, eq, ne } from "drizzle-orm";
-import { revalidateTag } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -55,7 +38,6 @@ async function createOrganizationSchema() {
 
 export const createOrganization = withUser<ActionState>(
   createOrganizationSchema,
-  CREATE_ORGANIZATION,
   async (data, formData, user): Promise<ActionState> => {
     const t = await getScopedI18n("organization.create");
     const validatedData = data as z.infer<

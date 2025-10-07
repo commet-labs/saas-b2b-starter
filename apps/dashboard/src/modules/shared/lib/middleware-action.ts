@@ -23,7 +23,6 @@ type WithUserFunction<T> = (
 
 export function withUser<T>(
   createSchema: () => Promise<z.ZodType<unknown, unknown>>,
-  actionName: string,
   action: WithUserFunction<T>,
 ) {
   return async (prevState: ActionState, formData: FormData): Promise<T> => {
@@ -60,7 +59,6 @@ type WithUserAndOrgFunction<T> = (
 
 export function withUserAndOrg<T>(
   createSchema: () => Promise<z.ZodType<unknown, unknown>>,
-  actionName: string,
   action: WithUserAndOrgFunction<T>,
 ) {
   return async (prevState: ActionState, formData: FormData): Promise<T> => {

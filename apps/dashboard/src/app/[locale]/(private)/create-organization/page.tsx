@@ -1,5 +1,5 @@
 import { auth } from "@/modules/auth/lib/auth";
-import { CreateOrganizationForm } from "@/modules/settings/organization/components/create-organization-form";
+import { CreateOrganizationForm } from "@/modules/organization/components/create-organization-form";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
