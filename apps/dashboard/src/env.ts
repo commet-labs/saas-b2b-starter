@@ -12,6 +12,9 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: z.string().min(1),
     BETTER_AUTH_URL: z.url(),
 
+    // Commet
+    COMMET_API_KEY: z.string().min(1),
+
     // Node environment
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -32,6 +35,7 @@ export const env = createEnv({
     // Server
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
+    COMMET_API_KEY: process.env.COMMET_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
   },
 

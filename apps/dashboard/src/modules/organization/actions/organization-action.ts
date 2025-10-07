@@ -7,6 +7,7 @@ import {
   withUser,
   withUserAndOrg,
 } from "@/modules/shared/lib/middleware-action";
+import { commet } from "@/modules/shared/lib/commet-client";
 import { db } from "@repo/database/connection";
 import {
   member,
@@ -88,6 +89,32 @@ export const createOrganization = withUser<ActionState>(
           organizationId: organization.id,
         },
       });
+
+      // Create customer in Commet
+      try {
+        await commet.customers.create({
+          legalName: organization.name,
+          displayName: organization.name,
+          billingEmail: user.email,
+          currency: "USD", // You can make this configurable based on your needs
+          address: {
+            line1: "TBD", // To be determined by the customer later
+            city: "TBD",
+            postalCode: "00000",
+            country: "US", // Default country, can be configured
+          },
+          metadata: {
+            organizationId: organization.id,
+            slug: finalSlug,
+            createdBy: user.id,
+            createdAt: new Date().toISOString(),
+          },
+        });
+      } catch (commetError) {
+        // Log the error but don't fail the organization creation
+        console.error("Failed to create Commet customer:", commetError);
+        // The organization was created successfully, so we continue
+      }
 
       // Redirect to the organization dashboard (this will throw NEXT_REDIRECT)
       redirect(`/${finalSlug}/dashboard`);
