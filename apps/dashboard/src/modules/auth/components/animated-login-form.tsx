@@ -11,15 +11,9 @@ import { useEffect, useState } from "react";
 
 interface AnimatedLoginFormProps {
   onError: (error: string | null) => void;
-  isAnyLoading: boolean;
-  isPasswordMode: boolean;
 }
 
-export const AnimatedLoginForm = ({
-  onError,
-  isAnyLoading,
-  isPasswordMode,
-}: AnimatedLoginFormProps) => {
+export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
   const [email, setEmail] = useState("");
   const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
@@ -29,13 +23,6 @@ export const AnimatedLoginForm = ({
   const t = useScopedI18n("login");
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/";
-
-  // Reset form when switching modes (not needed for magic link only)
-  useEffect(() => {
-    if (!isPasswordMode) {
-      // Reset any form state if needed
-    }
-  }, [isPasswordMode]);
 
   // Countdown timer
   useEffect(() => {
@@ -182,7 +169,7 @@ export const AnimatedLoginForm = ({
                   variant="outline"
                   className="w-full relative overflow-hidden"
                   onClick={handleSendAnother}
-                  disabled={!canResend || isAnyLoading}
+                  disabled={!canResend || isMagicLinkLoading}
                 >
                   {/* Progress bar background */}
                   {!canResend && (
@@ -240,7 +227,7 @@ export const AnimatedLoginForm = ({
                   placeholder={t("emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={isAnyLoading || isMagicLinkLoading}
+                  disabled={isMagicLinkLoading}
                   required
                 />
               </div>
@@ -249,7 +236,7 @@ export const AnimatedLoginForm = ({
               <Button
                 type="submit"
                 className="w-full"
-                disabled={!email || isAnyLoading || isMagicLinkLoading}
+                disabled={!email || isMagicLinkLoading}
               >
                 {isMagicLinkLoading ? (
                   <>
