@@ -96,19 +96,7 @@ export const createOrganization = withUser<ActionState>(
           legalName: organization.name,
           displayName: organization.name,
           billingEmail: user.email,
-          currency: "USD", // You can make this configurable based on your needs
-          address: {
-            line1: "TBD", // To be determined by the customer later
-            city: "TBD",
-            postalCode: "00000",
-            country: "US", // Default country, can be configured
-          },
-          metadata: {
-            organizationId: organization.id,
-            slug: finalSlug,
-            createdBy: user.id,
-            createdAt: new Date().toISOString(),
-          },
+          externalId: organization.id,
         });
       } catch (commetError) {
         // Log the error but don't fail the organization creation

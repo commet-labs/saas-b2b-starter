@@ -6,4 +6,5 @@ import { Commet } from "commet";
  */
 export const commet = new Commet({
   apiKey: env.COMMET_API_KEY,
+  environment: "sandbox",
 });
