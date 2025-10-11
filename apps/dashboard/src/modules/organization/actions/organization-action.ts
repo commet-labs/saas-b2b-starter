@@ -98,6 +98,9 @@ export const createOrganization = withUser<ActionState>(
           billingEmail: user.email,
           externalId: organization.id,
         });
+        console.log(
+          `[Commet] Customer created: ${organization.name} (${organization.id})`,
+        );
       } catch (commetError) {
         // Log the error but don't fail the organization creation
         console.error("Failed to create Commet customer:", commetError);
