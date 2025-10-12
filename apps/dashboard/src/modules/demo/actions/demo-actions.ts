@@ -107,7 +107,7 @@ export async function createDemoOrganizations(
  */
 export async function addSeatsToOrg(
   orgId: string,
-  seatType: "admin" | "user" | "viewer",
+  seatType: "admin_seat" | "editor_seat" | "viewer_seat" | "api_key",
   quantity: number,
 ): Promise<ActionResult> {
   try {
@@ -132,13 +132,9 @@ export async function addSeatsToOrg(
 
     // Add seats in Commet
     const result = await commet.seats.add({
-      customerId: orgId,
+      customerId: orgId as `cus_${string}`,
       seatType: seatType,
-      quantity: quantity,
-      metadata: {
-        demo: true,
-        timestamp: new Date().toISOString(),
-      },
+      count: quantity,
     });
 
     console.log(
@@ -164,7 +160,7 @@ export async function addSeatsToOrg(
  */
 export async function removeSeatsFromOrg(
   orgId: string,
-  seatType: "admin" | "user" | "viewer",
+  seatType: "admin_seat" | "editor_seat" | "viewer_seat" | "api_key",
   quantity: number,
 ): Promise<ActionResult> {
   try {
@@ -189,13 +185,9 @@ export async function removeSeatsFromOrg(
 
     // Remove seats in Commet
     const result = await commet.seats.remove({
-      customerId: orgId,
+      customerId: orgId as `cus_${string}`,
       seatType: seatType,
-      quantity: quantity,
-      metadata: {
-        demo: true,
-        timestamp: new Date().toISOString(),
-      },
+      count: quantity,
     });
 
     console.log(
@@ -221,7 +213,13 @@ export async function removeSeatsFromOrg(
  */
 export async function sendUsageEvent(
   orgId: string,
-  eventType: "api_call" | "storage_gb" | "compute_hours",
+  eventType:
+    | "api_call"
+    | "payment_transaction"
+    | "sms_notification"
+    | "analytics_usage"
+    | "data_processing"
+    | "user_activity",
   quantity: number,
 ): Promise<ActionResult> {
   try {
@@ -247,12 +245,12 @@ export async function sendUsageEvent(
     // Send usage event to Commet
     const result = await commet.usage.create({
       eventType: eventType,
-      customerId: orgId,
-      quantity: quantity,
-      metadata: {
-        demo: true,
-        timestamp: new Date().toISOString(),
-      },
+      customerId: orgId as `cus_${string}`,
+      properties: [
+        { property: "quantity", value: quantity.toString() },
+        { property: "demo", value: "true" },
+        { property: "timestamp", value: new Date().toISOString() },
+      ],
     });
 
     console.log(
@@ -278,7 +276,13 @@ export async function sendUsageEvent(
  */
 export async function sendBatchUsageEvents(
   orgId: string,
-  eventType: "api_call" | "storage_gb" | "compute_hours",
+  eventType:
+    | "api_call"
+    | "payment_transaction"
+    | "sms_notification"
+    | "analytics_usage"
+    | "data_processing"
+    | "user_activity",
   count: number,
 ): Promise<ActionResult> {
   try {
@@ -304,17 +308,17 @@ export async function sendBatchUsageEvents(
     // Create batch events
     const events = Array.from({ length: count }, (_, i) => ({
       eventType: eventType,
-      customerId: orgId,
-      quantity: 1,
+      customerId: orgId as `cus_${string}`,
       timestamp: new Date(Date.now() + i * 1000).toISOString(),
-      metadata: {
-        demo: true,
-        batch_index: i,
-      },
+      properties: [
+        { property: "quantity", value: "1" },
+        { property: "demo", value: "true" },
+        { property: "batch_index", value: i.toString() },
+      ],
     }));
 
     // Send batch to Commet
-    const result = await commet.usage.createBatch(events);
+    const result = await commet.usage.createBatch({ events });
 
     console.log(
       `[Commet Demo] Batch usage: ${org.name} - ${count}x ${eventType}`,

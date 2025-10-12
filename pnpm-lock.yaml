@@ -24,8 +24,8 @@ importers:
   apps/dashboard:
     dependencies:
       '@commet/node':
-        specifier: ^0.5.0
-        version: 0.5.0(typescript@5.9.3)
+        specifier: ^0.6.0
+        version: 0.6.0(typescript@5.9.3)
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -424,8 +424,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@commet/node@0.5.0':
-    resolution: {integrity: sha512-vJge9o+RG/5YKa1W9ockBc5P8s34pUrdBWnaKJP/LSTizlTdfOFbEa5RdNOb48+HfQff8AB8YR454SFGF+RG7Q==}
+  '@commet/node@0.6.0':
+    resolution: {integrity: sha512-Enle0YApVRwAnlljpjy9eZ41vhcVxX6l54oOB46C0ajJ0jnFNewaNoZlDRHDGtB8+O2SAuFnRkHRexrGKto7wA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       typescript: '>=5.0.0'
@@ -3871,7 +3871,7 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@commet/node@0.5.0(typescript@5.9.3)':
+  '@commet/node@0.6.0(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
       zod: 3.24.2

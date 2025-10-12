@@ -26,7 +26,9 @@ export function SeatEventsForm({
   onEventCreated,
 }: SeatEventsFormProps) {
   const [selectedOrg, setSelectedOrg] = useState<string>("");
-  const [seatType, setSeatType] = useState<"admin" | "user" | "viewer">("user");
+  const [seatType, setSeatType] = useState<
+    "admin_seat" | "editor_seat" | "viewer_seat" | "api_key"
+  >("admin_seat");
   const [quantity, setQuantity] = useState(5);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
@@ -116,16 +118,23 @@ export function SeatEventsForm({
           <Select
             value={seatType}
             onValueChange={(value) =>
-              setSeatType(value as "admin" | "user" | "viewer")
+              setSeatType(
+                value as
+                  | "admin_seat"
+                  | "editor_seat"
+                  | "viewer_seat"
+                  | "api_key",
+              )
             }
           >
             <SelectTrigger id="seat-type">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="admin">Admin</SelectItem>
-              <SelectItem value="user">User</SelectItem>
-              <SelectItem value="viewer">Viewer</SelectItem>
+              <SelectItem value="admin_seat">Admin Seat</SelectItem>
+              <SelectItem value="editor_seat">Editor Seat</SelectItem>
+              <SelectItem value="viewer_seat">Viewer Seat</SelectItem>
+              <SelectItem value="api_key">API Key</SelectItem>
             </SelectContent>
           </Select>
         </div>

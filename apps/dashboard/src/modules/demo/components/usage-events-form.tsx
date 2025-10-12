@@ -27,7 +27,12 @@ export function UsageEventsForm({
 }: UsageEventsFormProps) {
   const [selectedOrg, setSelectedOrg] = useState<string>("");
   const [eventType, setEventType] = useState<
-    "api_call" | "storage_gb" | "compute_hours"
+    | "api_call"
+    | "payment_transaction"
+    | "sms_notification"
+    | "analytics_usage"
+    | "data_processing"
+    | "user_activity"
   >("api_call");
   const [quantity, setQuantity] = useState(100);
   const [batchCount, setBatchCount] = useState(10);
@@ -164,7 +169,15 @@ export function UsageEventsForm({
         <Select
           value={eventType}
           onValueChange={(value) =>
-            setEventType(value as "api_call" | "storage_gb" | "compute_hours")
+            setEventType(
+              value as
+                | "api_call"
+                | "payment_transaction"
+                | "sms_notification"
+                | "analytics_usage"
+                | "data_processing"
+                | "user_activity",
+            )
           }
         >
           <SelectTrigger id="event-type">
@@ -172,8 +185,13 @@ export function UsageEventsForm({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="api_call">API Call</SelectItem>
-            <SelectItem value="storage_gb">Storage (GB)</SelectItem>
-            <SelectItem value="compute_hours">Compute Hours</SelectItem>
+            <SelectItem value="payment_transaction">
+              Payment Transaction
+            </SelectItem>
+            <SelectItem value="sms_notification">SMS Notification</SelectItem>
+            <SelectItem value="analytics_usage">Analytics Usage</SelectItem>
+            <SelectItem value="data_processing">Data Processing</SelectItem>
+            <SelectItem value="user_activity">User Activity</SelectItem>
           </SelectContent>
         </Select>
       </div>
