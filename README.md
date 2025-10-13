@@ -1,204 +1,198 @@
-# Turborepo + shadcn/ui + Tailwind CSS 4
+# B2B Template with Commet Billing
 
-A modern, production-ready monorepo template featuring Turborepo, Next.js 15, shadcn/ui, and Tailwind CSS 4. Built with performance and developer experience in mind.
+A simple template to test and demonstrate Commet's billing features. Shows how to integrate seat management and usage tracking in a Next.js app.
 
-## Features
+## What's Included
 
-- **Monorepo Architecture**: Powered by Turborepo for efficient build caching and parallel task execution
-- **Next.js 15**: Latest Next.js with Turbopack for lightning-fast development
-- **React 19**: Built with the latest React features
-- **Tailwind CSS 4**: Modern utility-first CSS framework
-- **shadcn/ui**: High-quality, accessible UI components built with Radix UI
-- **TypeScript**: Full type safety across the entire monorepo
-- **Biome**: Fast linting and formatting with zero configuration
-- **pnpm**: Efficient package management with workspace support
-- **Shared UI Package**: Reusable component library across multiple apps
+- **Commet Integration**: Working examples of customers, seats, and usage tracking
+- **Interactive Demo**: `/dashboard` page to test all Commet features
+- **Server Actions**: Clean patterns for Commet SDK calls
+- **Type Safety**: Auto-generated types from Commet CLI
+- **Basic Auth**: Simple org structure with Better Auth
+- **UI Components**: Pre-built forms using shadcn/ui
 
 ## Project Structure
 
 ```
 .
 ├── apps
-│   └── web                    # Next.js application
-│       ├── app                # App router pages
-│       ├── components         # App-specific components
-│       └── package.json
+│   └── dashboard              # Main SaaS application
+│       ├── src
+│       │   ├── app            # Next.js App Router
+│       │   │   ├── (private)  # Protected routes (dashboard, demo)
+│       │   │   ├── (auth)     # Auth routes (login, invitations)
+│       │   │   └── api        # API routes
+│       │   └── modules
+│       │       ├── auth       # Authentication logic
+│       │       ├── organization # Org management
+│       │       ├── dashboard  # Commet demo components
+│       │       └── shared     # Shared utilities
+│       └── .commet            # Generated Commet types
 ├── packages
-│   ├── ui                     # Shared UI component library
-│   │   ├── src
-│   │   │   ├── components     # shadcn/ui components
-│   │   │   ├── hooks          # Shared React hooks
-│   │   │   ├── lib            # Utility functions
-│   │   │   └── styles         # Global styles
-│   │   └── package.json
-│   └── typescript-config      # Shared TypeScript configurations
-├── biome.json                 # Biome configuration
-├── turbo.json                 # Turborepo configuration
-└── package.json               # Root package.json
+│   ├── database               # Drizzle ORM + schemas
+│   ├── ui                     # Shared UI components
+│   └── typescript-config      # Shared TS configs
+└── docker-compose.yml         # PostgreSQL for local dev
 ```
 
 ## Prerequisites
 
 - Node.js >= 20
 - pnpm >= 10.4.1
+- Docker (for local PostgreSQL)
+- Commet account ([sign up](https://commet.co))
 
 ## Getting Started
 
-1. **Clone the repository**
+1. **Clone and install**
 
 ```bash
 git clone <your-repo-url>
-cd turborepo-shadcn-tailwind-4
-```
-
-2. **Install dependencies**
-
-```bash
+cd sass-b2b-starter
 pnpm install
 ```
 
-3. **Start development server**
+2. **Setup database**
+
+```bash
+docker-compose up -d
+cd packages/database
+pnpm db:push
+```
+
+3. **Configure environment**
+
+Create `apps/dashboard/.env.local`:
+
+```env
+# Better Auth
+BETTER_AUTH_SECRET=your-secret-here
+BETTER_AUTH_URL=http://localhost:3000
+
+# Commet
+COMMET_API_KEY=your-commet-api-key
+```
+
+4. **Setup Commet types**
+
+```bash
+cd apps/dashboard
+commet login       # Login to Commet
+commet link        # Link to your organization
+commet pull        # Generate TypeScript types
+```
+
+5. **Start development**
 
 ```bash
 pnpm dev
 ```
 
-The application will be available at `http://localhost:3000`
+Visit `http://localhost:3000` and create an account to get started.
+
+## Commet Integration Demo
+
+Once logged in, visit `/dashboard` to test Commet's billing features:
+
+### 1. Create Customers
+- Create 1, 10, or 50 demo organizations
+- Each becomes a Commet customer automatically
+
+### 2. Seat Events
+- Add/remove seats for any organization
+- Track seat types: `admin_seat`, `editor_seat`, `viewer_seat`, `api_key`
+
+### 3. Usage Events
+- Send single or batch usage events
+- Event types: `api_call`, `payment_transaction`, `sms_notification`, `analytics_usage`, `data_processing`, `user_activity`
+
+All events appear in your Commet dashboard (sandbox mode) in real-time.
 
 ## Available Scripts
 
-In the root directory, you can run:
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm lint` - Run Biome linter
+- `pnpm db:push` - Push database schema (in packages/database)
+- `pnpm db:studio` - Open Drizzle Studio
 
-- `pnpm dev` - Start development servers for all apps
-- `pnpm build` - Build all apps and packages
-- `pnpm lint` - Run linting across all workspaces
-- `pnpm format-and-lint` - Check formatting and linting with Biome
-- `pnpm format-and-lint:fix` - Fix formatting and linting issues automatically
+## How It Works
 
-## Adding shadcn/ui Components
-
-To add new shadcn/ui components to your project:
-
-```bash
-pnpm dlx shadcn@latest add <component-name> -c apps/web
-```
-
-For example, to add a button component:
-
-```bash
-pnpm dlx shadcn@latest add button -c apps/web
-```
-
-This will automatically place the component in `packages/ui/src/components` where it can be shared across all apps in the monorepo.
-
-## Using Components
-
-Import components from the shared UI package in your app:
-
+### Customers
+When you create an organization, it automatically creates a Commet customer:
 ```tsx
-import { Button } from "@repo/ui/components/button"
-import { Card } from "@repo/ui/components/card"
-
-export default function Page() {
-  return (
-    <Card>
-      <Button>Click me</Button>
-    </Card>
-  )
-}
+await commet.customers.create({
+  legalName: "Acme Corp",
+  displayName: "Acme Corp",
+  billingEmail: "billing@acme.com",
+  externalId: organizationId,
+});
 ```
 
-## Adding New Apps
+### Seat Management
+Track seats by type (admin, editor, viewer, API keys):
+```tsx
+await commet.seats.add({
+  customerId: "cus_xxx",
+  seatType: "admin_seat",
+  count: 5,
+});
+```
 
-To add a new application to the monorepo:
-
-1. Create a new directory in `apps/`
-2. Add a `package.json` with the necessary dependencies
-3. Include `"@repo/ui": "workspace:*"` to use the shared UI package
-4. Update the app's Tailwind and PostCSS configs to reference the UI package
-
-## Adding New Packages
-
-To add a new shared package:
-
-1. Create a new directory in `packages/`
-2. Add a `package.json` with appropriate exports
-3. Reference it in apps using `"@repo/<package-name>": "workspace:*"`
+### Usage Tracking
+Send usage events for metered billing:
+```tsx
+await commet.usage.create({
+  eventType: "api_call",
+  customerId: "cus_xxx",
+  properties: [
+    { property: "quantity", value: "100" }
+  ],
+});
+```
 
 ## Tech Stack
 
 ### Core
+- [Next.js 15](https://nextjs.org/) - React framework with App Router
+- [Better Auth](https://better-auth.com/) - Authentication with organizations
+- [Commet](https://commet.co) - Usage-based billing platform
+- [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM
+- [PostgreSQL](https://www.postgresql.org/) - Database
 
-- [Turborepo](https://turbo.build/repo) - High-performance build system
-- [Next.js 15](https://nextjs.org/) - React framework with Turbopack
-- [React 19](https://react.dev/) - UI library
+### UI
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
+- [shadcn/ui](https://ui.shadcn.com/) - UI components
+- [Radix UI](https://www.radix-ui.com/) - Accessible primitives
+
+### Development
+- [Turborepo](https://turbo.build/repo) - Monorepo build system
+- [Biome](https://biomejs.dev/) - Linter and formatter
 - [TypeScript](https://www.typescriptlang.org/) - Type safety
 
-### UI & Styling
+## Environment Variables
 
-- [Tailwind CSS 4](https://tailwindcss.com/) - Utility-first CSS framework
-- [shadcn/ui](https://ui.shadcn.com/) - Re-usable component collection
-- [Radix UI](https://www.radix-ui.com/) - Unstyled, accessible components
-- [Lucide React](https://lucide.dev/) - Beautiful icon library
+### Required
 
-### Development Tools
+```env
+# Better Auth
+BETTER_AUTH_SECRET=         # Generate with: openssl rand -base64 32
+BETTER_AUTH_URL=            # Your app URL
 
-- [Biome](https://biomejs.dev/) - Fast linter and formatter
-- [pnpm](https://pnpm.io/) - Fast, disk space efficient package manager
+# Commet
+COMMET_API_KEY=             # From Commet dashboard
 
-## Configuration
-
-### Tailwind CSS
-
-Tailwind is configured in the UI package (`packages/ui`). The web app automatically inherits these styles by importing the global CSS file.
-
-### TypeScript
-
-Shared TypeScript configurations are located in `packages/typescript-config`:
-- `base.json` - Base configuration
-- `nextjs.json` - Next.js specific configuration
-- `react-library.json` - React library configuration
-
-### Biome
-
-Linting and formatting rules are configured in `biome.json` at the root level and apply to all workspaces.
-
-## Building for Production
-
-To create a production build:
-
-```bash
-pnpm build
+# Database (auto-configured with docker-compose)
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/saas
 ```
 
-To start the production server:
+## Learn More
 
-```bash
-cd apps/web
-pnpm start
-```
-
-## Deployment
-
-This monorepo is optimized for deployment on [Vercel](https://vercel.com), but can be deployed to any platform that supports Next.js.
-
-### Vercel
-
-1. Import your repository into Vercel
-2. Set the root directory to `apps/web`
-3. Vercel will automatically detect and configure the build settings
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+- [Commet Documentation](https://docs.commet.co)
+- [Better Auth Documentation](https://better-auth.com/docs)
+- [Next.js 15 Documentation](https://nextjs.org/docs)
+- [Drizzle ORM Documentation](https://orm.drizzle.team/docs)
 
 ## License
 
 MIT
-
-## Learn More
-
-- [Turborepo Documentation](https://turbo.build/repo/docs)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [shadcn/ui Documentation](https://ui.shadcn.com/)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
