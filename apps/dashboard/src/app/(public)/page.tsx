@@ -52,11 +52,10 @@ export default async function LandingPage() {
   // User is not authenticated, show landing page
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold">Bienvenido a Commet Billing</h1>
+      <h1 className="text-4xl font-bold">Welcome to Commet Billing</h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        La plataforma para gestionar tu facturación
+        The platform to manage your billing
       </p>
-      {/* Aquí puedes agregar tu landing page */}
     </div>
   );
 }

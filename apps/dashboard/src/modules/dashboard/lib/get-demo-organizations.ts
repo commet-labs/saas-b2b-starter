@@ -14,15 +14,16 @@ export interface DemoOrganization {
   createdAt: Date;
 }
 
-export const getDemoOrganizations = async (): Promise<
-  DemoOrganization[] | null
-> => {
+export const getDemoOrganizations = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   if (!session?.user) {
-    return null;
+    return {
+      organizations: [],
+      activeOrganization: null,
+    };
   }
 
   const user = session.user;
@@ -40,5 +41,14 @@ export const getDemoOrganizations = async (): Promise<
     .where(eq(member.userId, user.id))
     .orderBy(organizationTable.createdAt);
 
-  return orgs;
+  // Get active organization from session
+  const activeOrgId = session.session.activeOrganizationId;
+  const activeOrg = activeOrgId
+    ? orgs.find((org) => org.id === activeOrgId) || null
+    : null;
+
+  return {
+    organizations: orgs,
+    activeOrganization: activeOrg,
+  };
 };

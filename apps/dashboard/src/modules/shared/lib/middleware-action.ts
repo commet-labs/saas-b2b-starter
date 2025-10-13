@@ -1,4 +1,3 @@
-import { getScopedI18n } from "@/locales/server";
 import { auth } from "@/modules/auth/lib/auth";
 import { db } from "@repo/database/connection";
 import type { Organization, User } from "@repo/database/schema";
@@ -26,8 +25,6 @@ export function withUser<T>(
   action: WithUserFunction<T>,
 ) {
   return async (prevState: ActionState, formData: FormData): Promise<T> => {
-    const t = await getScopedI18n("shared.validation");
-
     const user = await getUser();
     if (!user) {
       throw new Error("User is not authenticated");
@@ -40,7 +37,7 @@ export function withUser<T>(
     if (!result.success) {
       return {
         success: false,
-        message: t("validation_failed"),
+        message: "Validation failed",
         errors: result.error.flatten().fieldErrors,
       } as T;
     }
@@ -62,8 +59,6 @@ export function withUserAndOrg<T>(
   action: WithUserAndOrgFunction<T>,
 ) {
   return async (prevState: ActionState, formData: FormData): Promise<T> => {
-    const t = await getScopedI18n("shared.validation");
-
     // Get session with organization from Better Auth
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -97,7 +92,7 @@ export function withUserAndOrg<T>(
     if (!result.success) {
       return {
         success: false,
-        message: t("validation_failed"),
+        message: "Validation failed",
         errors: result.error.flatten().fieldErrors,
       } as T;
     }

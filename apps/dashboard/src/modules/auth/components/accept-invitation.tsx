@@ -1,4 +1,3 @@
-import { getScopedI18n } from "@/locales/server";
 import { auth } from "@/modules/auth/lib/auth";
 import {
   Card,
@@ -17,8 +16,6 @@ interface AcceptInvitationProps {
 export async function AcceptInvitation({
   invitationId,
 }: AcceptInvitationProps) {
-  const t = await getScopedI18n("invitation.error");
-
   // Check if user is authenticated first
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -59,13 +56,19 @@ export async function AcceptInvitation({
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-red-600">
               <XCircle className="h-5 w-5" />
-              {t("title")}
+              Error Accepting Invitation
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <p className="text-muted-foreground">{t("message")}</p>
-              <p className="text-sm text-muted-foreground">{t("contact")}</p>
+              <p className="text-muted-foreground">
+                The invitation could not be accepted. It may have expired or
+                already been used.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                If you think this is an error, contact the person who sent you
+                the invitation.
+              </p>
             </div>
           </CardContent>
         </Card>

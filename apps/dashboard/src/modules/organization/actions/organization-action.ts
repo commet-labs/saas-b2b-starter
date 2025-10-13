@@ -1,49 +1,41 @@
 "use server";
 
-import { getScopedI18n } from "@/locales/server";
 import { auth } from "@/modules/auth/lib/auth";
 import {
   type ActionState,
   withUser,
-  withUserAndOrg,
 } from "@/modules/shared/lib/middleware-action";
 import { commet } from "@/modules/shared/lib/commet-client";
 import { db } from "@repo/database/connection";
-import {
-  member,
-  organization as organizationTable,
-} from "@repo/database/schema";
-import { and, eq, ne } from "drizzle-orm";
+import { organization as organizationTable } from "@repo/database/schema";
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { generateSlugFromName } from "../lib/slug-utils";
 
-// Dynamic schema for creating organization
-async function createOrganizationSchema() {
-  const t = await getScopedI18n("organization.create.validation");
-  return z.object({
-    name: z
-      .string()
-      .min(1, t("name.required"))
-      .max(50, t("name.maxLength"))
-      .trim(),
-    slug: z
-      .string()
-      .max(48, t("slug.maxLength"))
-      .regex(/^[a-z0-9-]*$/, t("slug.format"))
-      .trim()
-      .optional(), // Make slug optional since it can be auto-generated
-  });
-}
+// Schema for creating organization
+const createOrganizationSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Organization name is required")
+    .max(50, "Organization name must be less than 50 characters")
+    .trim(),
+  slug: z
+    .string()
+    .max(48, "Organization slug must be less than 48 characters")
+    .regex(
+      /^[a-z0-9-]*$/,
+      "Only lowercase letters, numbers and hyphens are allowed",
+    )
+    .trim()
+    .optional(), // Make slug optional since it can be auto-generated
+});
 
 export const createOrganization = withUser<ActionState>(
-  createOrganizationSchema,
+  async () => createOrganizationSchema,
   async (data, formData, user): Promise<ActionState> => {
-    const t = await getScopedI18n("organization.create");
-    const validatedData = data as z.infer<
-      Awaited<ReturnType<typeof createOrganizationSchema>>
-    >;
+    const validatedData = data as z.infer<typeof createOrganizationSchema>;
 
     try {
       // Generate slug if not provided or empty
@@ -78,7 +70,7 @@ export const createOrganization = withUser<ActionState>(
       if (!organization) {
         return {
           success: false,
-          message: t("messages.error"),
+          message: "Failed to create organization",
         };
       }
 
@@ -108,7 +100,7 @@ export const createOrganization = withUser<ActionState>(
       }
 
       // Redirect to the organization dashboard (this will throw NEXT_REDIRECT)
-      redirect(`/${finalSlug}/dashboard`);
+      redirect("/dashboard");
     } catch (error) {
       // Check if this is a redirect error (expected behavior)
       if (error instanceof Error && error.message === "NEXT_REDIRECT") {
@@ -129,8 +121,13 @@ export const createOrganization = withUser<ActionState>(
         ) {
           return {
             success: false,
-            message: t("messages.slugTaken"),
-            errors: { slug: [t("messages.slugTaken")] },
+            message:
+              "This slug is already taken. Please choose a different one.",
+            errors: {
+              slug: [
+                "This slug is already taken. Please choose a different one.",
+              ],
+            },
           };
         }
       }
@@ -138,7 +135,7 @@ export const createOrganization = withUser<ActionState>(
       // Generic error
       return {
         success: false,
-        message: t("messages.error"),
+        message: "Failed to create organization",
       };
     }
   },

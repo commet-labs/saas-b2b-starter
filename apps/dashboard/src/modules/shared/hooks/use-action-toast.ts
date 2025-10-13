@@ -1,6 +1,5 @@
 "use client";
 
-import { useScopedI18n } from "@/locales/client";
 import type { ActionState } from "@/modules/shared/lib/middleware-action";
 import { toast } from "@repo/ui/components/sonner";
 import { useActionState, useEffect, useRef } from "react";
@@ -22,7 +21,6 @@ export function useActionToast<TInput = FormData>(
     permalink,
   );
 
-  const t = useScopedI18n("components.action_toast");
   const loadingToastId = useRef<string | number | null>(null);
   const wasLoading = useRef(false);
   const hasExecuted = useRef(false);
@@ -31,7 +29,7 @@ export function useActionToast<TInput = FormData>(
   useEffect(() => {
     if (isPending && !wasLoading.current) {
       // Show loading toast when action starts - use provided message or fallback
-      const message = loadingMessage || t("loading");
+      const message = loadingMessage || "Loading...";
       loadingToastId.current = toast.loading(message);
       wasLoading.current = true;
       hasExecuted.current = true; // Mark that an action has been executed
@@ -43,7 +41,7 @@ export function useActionToast<TInput = FormData>(
       }
       wasLoading.current = false;
     }
-  }, [isPending, loadingMessage, t]);
+  }, [isPending, loadingMessage]);
 
   // Show success/error toast when action completes
   useEffect(() => {
@@ -51,15 +49,15 @@ export function useActionToast<TInput = FormData>(
     if (!isPending && wasLoading.current === false && hasExecuted.current) {
       if (state.success) {
         // Use provided message or fallback success message
-        const message = state.message || t("success");
+        const message = state.message || "Success";
         toast.success(message);
       } else if (!state.success) {
         // Use provided message or fallback error message
-        const message = state.message || t("error");
+        const message = state.message || "Error";
         toast.error(message);
       }
     }
-  }, [state, isPending, t]);
+  }, [state, isPending]);
 
   // Cleanup loading toast on unmount
   useEffect(() => {

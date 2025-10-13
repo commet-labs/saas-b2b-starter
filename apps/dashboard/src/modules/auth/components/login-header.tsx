@@ -1,12 +1,10 @@
-import { useScopedI18n } from "@/locales/client";
-
 export function LoginHeader() {
-  const t = useScopedI18n("login");
-
   return (
     <div className="text-center space-y-2">
-      <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-      <p className="text-sm text-muted-foreground">{t("description")}</p>
+      <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+      <p className="text-sm text-muted-foreground">
+        Login with your Google account or use magic link
+      </p>
     </div>
   );
 }

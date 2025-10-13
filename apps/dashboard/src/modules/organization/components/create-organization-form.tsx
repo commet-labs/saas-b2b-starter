@@ -1,6 +1,5 @@
 "use client";
 
-import { useScopedI18n } from "@/locales/client";
 import { useActionToast } from "@/modules/shared/hooks/use-action-toast";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
@@ -8,7 +7,6 @@ import { Label } from "@repo/ui/components/label";
 import { createOrganization } from "../actions/organization-action";
 
 export function CreateOrganizationForm() {
-  const t = useScopedI18n("organization.create");
   const [state, formAction, isPending] = useActionToast(createOrganization, {
     success: false,
     message: "",
@@ -19,21 +17,26 @@ export function CreateOrganizationForm() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="w-full max-w-md space-y-6">
           <div className="text-center">
-            <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
-            <p className="text-muted-foreground mt-2">{t("description")}</p>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Create your first organization
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              To get started, you need to create an organization where you can
+              manage your projects and billing.
+            </p>
           </div>
 
           <form action={formAction} className="space-y-4">
             <div>
               <Label htmlFor="name" className="block text-sm font-medium mb-2">
-                {t("form.name.label")}
+                Organization name
               </Label>
               <Input
                 type="text"
                 name="name"
                 id="name"
                 required
-                placeholder={t("form.name.placeholder")}
+                placeholder="My company"
                 disabled={isPending}
               />
               {state?.errors?.name && (
@@ -44,15 +47,14 @@ export function CreateOrganizationForm() {
             </div>
 
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending
-                ? t("form.submitting") || "Creating..."
-                : t("form.submit")}
+              {isPending ? "Creating..." : "Create organization"}
             </Button>
           </form>
 
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              {t("messages.redirecting")}
+              Once created, you will be automatically redirected to your
+              organization dashboard.
             </p>
           </div>
         </div>

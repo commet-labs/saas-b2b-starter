@@ -1,6 +1,5 @@
 "use client";
 
-import { useScopedI18n } from "@/locales/client";
 import { authClient } from "@/modules/auth/lib/auth-client";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
@@ -20,7 +19,6 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
   const [countdown, setCountdown] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const t = useScopedI18n("login");
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/";
 
@@ -57,7 +55,7 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
 
     // Validate email format before sending to server
     if (!isValidEmail(email)) {
-      const errorMessage = t("emailError");
+      const errorMessage = "Please enter a valid email address";
       setError(errorMessage);
       onError(errorMessage);
       return;
@@ -74,7 +72,7 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
       });
       setMagicLinkSent(true);
     } catch (error) {
-      const errorMessage = t("magicLinkError");
+      const errorMessage = "Error sending magic link";
       setError(errorMessage);
       onError(errorMessage);
     } finally {
@@ -146,7 +144,7 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
                   transition={{ delay: 0.4, duration: 0.3 }}
                   className="text-sm text-green-800 font-medium"
                 >
-                  {t("magicLinkSentTitle")}
+                  Magic link sent!
                 </motion.p>
                 <motion.p
                   initial={{ opacity: 0 }}
@@ -154,7 +152,7 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
                   transition={{ delay: 0.5, duration: 0.3 }}
                   className="text-xs text-green-600 mt-1"
                 >
-                  {t("magicLinkSentDescription")}
+                  Check your email and click the link to sign in
                 </motion.p>
               </motion.div>
 
@@ -184,10 +182,10 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
                   {/* Button content */}
                   <span className="relative z-10 flex items-center justify-center">
                     {canResend ? (
-                      t("sendAnotherLink")
+                      "Send another link"
                     ) : (
                       <span className="flex items-center space-x-2">
-                        <span>{t("sendAnotherLink")}</span>
+                        <span>Send another link</span>
                         <motion.span
                           key={countdown}
                           initial={{ scale: 1.2, opacity: 0 }}
@@ -219,12 +217,12 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
               {/* Email Input */}
               <div className="space-y-2">
                 <label htmlFor="animated-email" className="text-sm font-medium">
-                  {t("emailLabel")}
+                  Email
                 </label>
                 <Input
                   id="animated-email"
                   type="email"
-                  placeholder={t("emailPlaceholder")}
+                  placeholder="m@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isMagicLinkLoading}
@@ -241,10 +239,10 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
                 {isMagicLinkLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t("sendingMagicLink")}
+                    Sending...
                   </>
                 ) : (
-                  t("sendMagicLink")
+                  "Send Magic Link"
                 )}
               </Button>
             </form>

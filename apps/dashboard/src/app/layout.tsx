@@ -22,19 +22,17 @@ export const metadata: Metadata = {
     "Commet Billing is a platform for managing your billing and invoices.",
 };
 
-export default async function Layout(props: LayoutProps<"/[locale]">) {
-  const params = await props.params;
-
-  const { locale } = params;
-
-  const { children } = props;
-
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html suppressHydrationWarning lang={locale}>
+    <html suppressHydrationWarning lang="en">
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <Providers locale={locale}>{children}</Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
