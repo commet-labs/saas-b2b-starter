@@ -49,13 +49,6 @@ export default async function LandingPage() {
     redirect("/create-organization");
   }
 
-  // User is not authenticated, show landing page
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold">Welcome to Commet Billing</h1>
-      <p className="mt-4 text-lg text-muted-foreground">
-        The platform to manage your billing
-      </p>
-    </div>
-  );
+  // User is not authenticated, redirect to login
+  redirect("/login");
 }
