@@ -5,10 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/card";
-import { getDemoOrganizations } from "@/modules/demo/lib/get-demo-organizations";
-import { CreateCustomersForm } from "@/modules/demo/components/create-customers-form";
-import { SeatEventsForm } from "@/modules/demo/components/seat-events-form";
-import { UsageEventsForm } from "@/modules/demo/components/usage-events-form";
+import { getDemoOrganizations } from "@/modules/dashboard/lib/get-demo-organizations";
+import { CreateCustomersForm } from "@/modules/dashboard/components/create-customers-form";
+import { SeatEventsForm } from "@/modules/dashboard/components/seat-events-form";
+import { UsageEventsForm } from "@/modules/dashboard/components/usage-events-form";
 import { Building2, Users, Activity } from "lucide-react";
 
 export default async function DemoPage() {
