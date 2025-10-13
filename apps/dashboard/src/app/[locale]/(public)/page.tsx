@@ -22,7 +22,7 @@ export default async function LandingPage() {
       );
 
       if (activeOrganization) {
-        redirect(`/${activeOrganization.slug}/dashboard`);
+        redirect("/demo");
       }
     }
 
@@ -34,14 +34,14 @@ export default async function LandingPage() {
     // If user has organizations but no active one, set the first as active and redirect
     if (organizations.length > 0) {
       const firstOrg = organizations[0];
-      if (firstOrg?.id && firstOrg?.slug) {
+      if (firstOrg?.id) {
         await auth.api.setActiveOrganization({
           headers: await headers(),
           body: {
             organizationId: firstOrg.id,
           },
         });
-        redirect(`/${firstOrg.slug}/dashboard`);
+        redirect("/demo");
       }
     }
 
