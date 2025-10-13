@@ -56,7 +56,7 @@ export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
       <div className="space-y-2">
         <Label htmlFor="org-select">Organization</Label>
         <Select value={selectedOrg} onValueChange={setSelectedOrg}>
-          <SelectTrigger id="org-select">
+          <SelectTrigger id="org-select" className="w-full">
             <SelectValue placeholder="Select organization" />
           </SelectTrigger>
           <SelectContent>
@@ -73,7 +73,7 @@ export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
         <div className="space-y-2">
           <Label htmlFor="seat-type">Seat Type</Label>
           <Select value={seatType} onValueChange={setSeatType}>
-            <SelectTrigger id="seat-type">
+            <SelectTrigger id="seat-type" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

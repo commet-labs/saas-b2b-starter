@@ -55,7 +55,7 @@ export function UsageEventsForm({ organizations }: UsageEventsFormProps) {
       <div className="space-y-2">
         <Label htmlFor="usage-org-select">Organization</Label>
         <Select value={selectedOrg} onValueChange={setSelectedOrg}>
-          <SelectTrigger id="usage-org-select">
+          <SelectTrigger id="usage-org-select" className="w-full">
             <SelectValue placeholder="Select organization" />
           </SelectTrigger>
           <SelectContent>
@@ -71,7 +71,7 @@ export function UsageEventsForm({ organizations }: UsageEventsFormProps) {
       <div className="space-y-2">
         <Label htmlFor="event-type">Event Type</Label>
         <Select value={eventType} onValueChange={setEventType}>
-          <SelectTrigger id="event-type">
+          <SelectTrigger id="event-type" className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
