@@ -9,14 +9,13 @@ import { getDemoOrganizations } from "@/modules/demo/lib/get-demo-organizations"
 import { CreateCustomersForm } from "@/modules/demo/components/create-customers-form";
 import { SeatEventsForm } from "@/modules/demo/components/seat-events-form";
 import { UsageEventsForm } from "@/modules/demo/components/usage-events-form";
-import { EventLog } from "@/modules/demo/components/event-log";
 import { Building2, Users, Activity } from "lucide-react";
 
 export default async function DemoPage() {
   const organizations = await getDemoOrganizations();
 
   return (
-    <div className="container py-8 space-y-6">
+    <div className="container mx-auto py-8 space-y-6">
       <div>
         <h1 className="text-3xl font-bold mb-2">Commet Integration Demo</h1>
         <p className="text-muted-foreground">
@@ -99,8 +98,6 @@ export default async function DemoPage() {
           </CardContent>
         </Card>
       </div>
-
-      <EventLog />
 
       <Card className="bg-muted/50">
         <CardHeader>

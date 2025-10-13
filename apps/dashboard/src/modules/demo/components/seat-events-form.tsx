@@ -28,6 +28,7 @@ const initialState: ActionState = {
 export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
   const [selectedOrg, setSelectedOrg] = useState<string>("");
   const [seatType, setSeatType] = useState<string>("admin_seat");
+  const [quantity, setQuantity] = useState<string>("5");
 
   const [addState, addFormAction, isAddPending] = useActionState(
     addSeatsToOrg,
@@ -88,11 +89,11 @@ export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
           <Label htmlFor="seat-quantity">Quantity</Label>
           <Input
             id="seat-quantity"
-            name="quantity"
             type="number"
             min="1"
             max="100"
-            defaultValue="5"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
             disabled={isPending}
           />
         </div>
@@ -102,14 +103,7 @@ export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
         <form action={addFormAction} className="flex-1">
           <input type="hidden" name="orgId" value={selectedOrg} />
           <input type="hidden" name="seatType" value={seatType} />
-          <input
-            type="hidden"
-            name="quantity"
-            value={
-              (document.getElementById("seat-quantity") as HTMLInputElement)
-                ?.value || "5"
-            }
-          />
+          <input type="hidden" name="quantity" value={quantity} />
           <Button
             type="submit"
             disabled={isPending || !selectedOrg}
@@ -127,14 +121,7 @@ export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
         <form action={removeFormAction} className="flex-1">
           <input type="hidden" name="orgId" value={selectedOrg} />
           <input type="hidden" name="seatType" value={seatType} />
-          <input
-            type="hidden"
-            name="quantity"
-            value={
-              (document.getElementById("seat-quantity") as HTMLInputElement)
-                ?.value || "5"
-            }
-          />
+          <input type="hidden" name="quantity" value={quantity} />
           <Button
             type="submit"
             disabled={isPending || !selectedOrg}
