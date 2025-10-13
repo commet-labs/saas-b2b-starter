@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,68 +5,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/card";
+import { getDemoOrganizations } from "@/modules/demo/lib/get-demo-organizations";
 import { CreateCustomersForm } from "@/modules/demo/components/create-customers-form";
 import { SeatEventsForm } from "@/modules/demo/components/seat-events-form";
 import { UsageEventsForm } from "@/modules/demo/components/usage-events-form";
 import { EventLog } from "@/modules/demo/components/event-log";
-import { getDemoOrganizations } from "@/modules/demo/actions/demo-actions";
-import type { DemoEvent } from "@/modules/demo/lib/demo-utils";
-import { Building2, Users, Activity, Loader2 } from "lucide-react";
+import { Building2, Users, Activity } from "lucide-react";
 
-export default function DemoPage() {
-  const [organizations, setOrganizations] = useState<
-    Array<{ id: string; name: string }>
-  >([]);
-  const [events, setEvents] = useState<DemoEvent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    customers: 0,
-    seatEvents: 0,
-    usageEvents: 0,
-  });
-
-  const loadOrganizations = async () => {
-    setLoading(true);
-    try {
-      const result = await getDemoOrganizations();
-      if (result.success && result.data) {
-        const orgs = result.data as Array<{ id: string; name: string }>;
-        setOrganizations(orgs);
-        setStats((prev) => ({ ...prev, customers: orgs.length }));
-      }
-    } catch (error) {
-      console.error("Failed to load organizations:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadOrganizations();
-  }, []);
-
-  const handleEventCreated = (event: DemoEvent) => {
-    setEvents((prev) => [event, ...prev.slice(0, 49)]);
-
-    // Update stats
-    if (event.type === "customer") {
-      setStats((prev) => ({ ...prev, customers: prev.customers + 1 }));
-    } else if (event.type === "seat") {
-      setStats((prev) => ({ ...prev, seatEvents: prev.seatEvents + 1 }));
-    } else if (event.type === "usage") {
-      setStats((prev) => ({ ...prev, usageEvents: prev.usageEvents + 1 }));
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="container py-8">
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
-      </div>
-    );
-  }
+export default async function DemoPage() {
+  const organizations = await getDemoOrganizations();
 
   return (
     <div className="container py-8 space-y-6">
@@ -88,7 +32,9 @@ export default function DemoPage() {
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.customers}</div>
+            <div className="text-2xl font-bold">
+              {organizations?.length || 0}
+            </div>
             <p className="text-xs text-muted-foreground">
               Organizations created
             </p>
@@ -101,8 +47,8 @@ export default function DemoPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.seatEvents}</div>
-            <p className="text-xs text-muted-foreground">Seats added/removed</p>
+            <div className="text-2xl font-bold">-</div>
+            <p className="text-xs text-muted-foreground">Seats managed</p>
           </CardContent>
         </Card>
 
@@ -112,7 +58,7 @@ export default function DemoPage() {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.usageEvents}</div>
+            <div className="text-2xl font-bold">-</div>
             <p className="text-xs text-muted-foreground">Events tracked</p>
           </CardContent>
         </Card>
@@ -127,10 +73,7 @@ export default function DemoPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <CreateCustomersForm
-              onEventCreated={handleEventCreated}
-              onRefresh={loadOrganizations}
-            />
+            <CreateCustomersForm />
           </CardContent>
         </Card>
 
@@ -142,10 +85,7 @@ export default function DemoPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <SeatEventsForm
-              organizations={organizations}
-              onEventCreated={handleEventCreated}
-            />
+            <SeatEventsForm organizations={organizations || []} />
           </CardContent>
         </Card>
 
@@ -155,15 +95,12 @@ export default function DemoPage() {
             <CardDescription>Track usage for billing</CardDescription>
           </CardHeader>
           <CardContent>
-            <UsageEventsForm
-              organizations={organizations}
-              onEventCreated={handleEventCreated}
-            />
+            <UsageEventsForm organizations={organizations || []} />
           </CardContent>
         </Card>
       </div>
 
-      <EventLog events={events} />
+      <EventLog />
 
       <Card className="bg-muted/50">
         <CardHeader>

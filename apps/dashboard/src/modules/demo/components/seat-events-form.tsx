@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "@repo/ui/components/button";
 import { Input } from "@repo/ui/components/input";
 import { Label } from "@repo/ui/components/label";
@@ -13,78 +13,34 @@ import {
 } from "@repo/ui/components/select";
 import { Loader2, Plus, Minus } from "lucide-react";
 import { addSeatsToOrg, removeSeatsFromOrg } from "../actions/demo-actions";
-import type { DemoEvent } from "../lib/demo-utils";
-import { createDemoEvent } from "../lib/demo-utils";
+import type { ActionState } from "@/modules/shared/lib/middleware-action";
+import type { DemoOrganization } from "../lib/get-demo-organizations";
 
 interface SeatEventsFormProps {
-  organizations: Array<{ id: string; name: string }>;
-  onEventCreated: (event: DemoEvent) => void;
+  organizations: DemoOrganization[];
 }
 
-export function SeatEventsForm({
-  organizations,
-  onEventCreated,
-}: SeatEventsFormProps) {
+const initialState: ActionState = {
+  success: false,
+  message: "",
+};
+
+export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
   const [selectedOrg, setSelectedOrg] = useState<string>("");
-  const [seatType, setSeatType] = useState<
-    "admin_seat" | "editor_seat" | "viewer_seat" | "api_key"
-  >("admin_seat");
-  const [quantity, setQuantity] = useState(5);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const [seatType, setSeatType] = useState<string>("admin_seat");
 
-  const handleSeatAction = async (action: "add" | "remove") => {
-    if (!selectedOrg) {
-      setMessage({ type: "error", text: "Please select an organization" });
-      return;
-    }
+  const [addState, addFormAction, isAddPending] = useActionState(
+    addSeatsToOrg,
+    initialState,
+  );
 
-    setLoading(true);
-    setMessage(null);
+  const [removeState, removeFormAction, isRemovePending] = useActionState(
+    removeSeatsFromOrg,
+    initialState,
+  );
 
-    try {
-      const result =
-        action === "add"
-          ? await addSeatsToOrg(selectedOrg, seatType, quantity)
-          : await removeSeatsFromOrg(selectedOrg, seatType, quantity);
-
-      if (result.success) {
-        setMessage({
-          type: "success",
-          text:
-            result.message || `${action === "add" ? "Added" : "Removed"} seats`,
-        });
-
-        const org = organizations.find((o) => o.id === selectedOrg);
-        if (org) {
-          onEventCreated(
-            createDemoEvent(
-              "seat",
-              action === "add" ? "seats_added" : "seats_removed",
-              org.name,
-              org.id,
-              `${action === "add" ? "+" : "-"}${quantity} ${seatType} seats`,
-            ),
-          );
-        }
-      } else {
-        setMessage({
-          type: "error",
-          text: result.error || "Failed to update seats",
-        });
-      }
-    } catch (error) {
-      setMessage({
-        type: "error",
-        text: error instanceof Error ? error.message : "Unknown error",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const isPending = isAddPending || isRemovePending;
+  const state = addState.message ? addState : removeState;
 
   if (organizations.length === 0) {
     return (
@@ -115,18 +71,7 @@ export function SeatEventsForm({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="seat-type">Seat Type</Label>
-          <Select
-            value={seatType}
-            onValueChange={(value) =>
-              setSeatType(
-                value as
-                  | "admin_seat"
-                  | "editor_seat"
-                  | "viewer_seat"
-                  | "api_key",
-              )
-            }
-          >
+          <Select value={seatType} onValueChange={setSeatType}>
             <SelectTrigger id="seat-type">
               <SelectValue />
             </SelectTrigger>
@@ -143,53 +88,78 @@ export function SeatEventsForm({
           <Label htmlFor="seat-quantity">Quantity</Label>
           <Input
             id="seat-quantity"
+            name="quantity"
             type="number"
             min="1"
             max="100"
-            value={quantity}
-            onChange={(e) => setQuantity(Number.parseInt(e.target.value) || 1)}
-            disabled={loading}
+            defaultValue="5"
+            disabled={isPending}
           />
         </div>
       </div>
 
       <div className="flex gap-2">
-        <Button
-          onClick={() => handleSeatAction("add")}
-          disabled={loading || !selectedOrg}
-          className="flex-1"
-        >
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          ) : (
-            <Plus className="h-4 w-4 mr-2" />
-          )}
-          Add Seats
-        </Button>
-        <Button
-          onClick={() => handleSeatAction("remove")}
-          disabled={loading || !selectedOrg}
-          variant="outline"
-          className="flex-1"
-        >
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          ) : (
-            <Minus className="h-4 w-4 mr-2" />
-          )}
-          Remove Seats
-        </Button>
+        <form action={addFormAction} className="flex-1">
+          <input type="hidden" name="orgId" value={selectedOrg} />
+          <input type="hidden" name="seatType" value={seatType} />
+          <input
+            type="hidden"
+            name="quantity"
+            value={
+              (document.getElementById("seat-quantity") as HTMLInputElement)
+                ?.value || "5"
+            }
+          />
+          <Button
+            type="submit"
+            disabled={isPending || !selectedOrg}
+            className="w-full"
+          >
+            {isAddPending ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <Plus className="h-4 w-4 mr-2" />
+            )}
+            Add Seats
+          </Button>
+        </form>
+
+        <form action={removeFormAction} className="flex-1">
+          <input type="hidden" name="orgId" value={selectedOrg} />
+          <input type="hidden" name="seatType" value={seatType} />
+          <input
+            type="hidden"
+            name="quantity"
+            value={
+              (document.getElementById("seat-quantity") as HTMLInputElement)
+                ?.value || "5"
+            }
+          />
+          <Button
+            type="submit"
+            disabled={isPending || !selectedOrg}
+            variant="outline"
+            className="w-full"
+          >
+            {isRemovePending ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <Minus className="h-4 w-4 mr-2" />
+            )}
+            Remove Seats
+          </Button>
+        </form>
       </div>
 
-      {message && (
+      {state.message && (
         <div
           className={`text-sm p-3 rounded ${
-            message.type === "success"
+            state.success
               ? "bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-400"
               : "bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-400"
           }`}
         >
-          {message.text}
+          {state.message}
         </div>
       )}
     </div>
