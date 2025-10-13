@@ -33,8 +33,9 @@ export default function DemoPage() {
     try {
       const result = await getDemoOrganizations();
       if (result.success && result.data) {
-        setOrganizations(result.data);
-        setStats((prev) => ({ ...prev, customers: result.data.length }));
+        const orgs = result.data as Array<{ id: string; name: string }>;
+        setOrganizations(orgs);
+        setStats((prev) => ({ ...prev, customers: orgs.length }));
       }
     } catch (error) {
       console.error("Failed to load organizations:", error);
