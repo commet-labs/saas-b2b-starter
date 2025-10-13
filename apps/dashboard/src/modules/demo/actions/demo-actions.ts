@@ -132,7 +132,7 @@ export async function addSeatsToOrg(
 
     // Add seats in Commet
     const result = await commet.seats.add({
-      customerId: orgId as `cus_${string}`,
+      externalId: orgId,
       seatType: seatType,
       count: quantity,
     });
@@ -185,7 +185,7 @@ export async function removeSeatsFromOrg(
 
     // Remove seats in Commet
     const result = await commet.seats.remove({
-      customerId: orgId as `cus_${string}`,
+      externalId: orgId,
       seatType: seatType,
       count: quantity,
     });
@@ -245,7 +245,7 @@ export async function sendUsageEvent(
     // Send usage event to Commet
     const result = await commet.usage.create({
       eventType: eventType,
-      customerId: orgId as `cus_${string}`,
+      externalId: orgId,
       properties: [
         { property: "quantity", value: quantity.toString() },
         { property: "demo", value: "true" },
@@ -308,7 +308,7 @@ export async function sendBatchUsageEvents(
     // Create batch events
     const events = Array.from({ length: count }, (_, i) => ({
       eventType: eventType,
-      customerId: orgId as `cus_${string}`,
+      externalId: orgId,
       timestamp: new Date(Date.now() + i * 1000).toISOString(),
       properties: [
         { property: "quantity", value: "1" },

@@ -24,8 +24,8 @@ importers:
   apps/dashboard:
     dependencies:
       '@commet/node':
-        specifier: ^0.6.0
-        version: 0.6.0(typescript@5.9.3)
+        specifier: 0.6.1
+        version: 0.6.1(typescript@5.9.3)
       '@repo/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -424,8 +424,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@commet/node@0.6.0':
-    resolution: {integrity: sha512-Enle0YApVRwAnlljpjy9eZ41vhcVxX6l54oOB46C0ajJ0jnFNewaNoZlDRHDGtB8+O2SAuFnRkHRexrGKto7wA==}
+  '@commet/node@0.6.1':
+    resolution: {integrity: sha512-bSL0N/kWfj8sKiCl9gU8vmqPM7ar8pqaPUIPGvF9UMsiJeq51GPd9o7S0HeATrCxR6YgN4c4oLYNtL4e1OKyGQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       typescript: '>=5.0.0'
@@ -3814,6 +3814,9 @@ packages:
   zod@3.24.2:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zod@4.1.12:
     resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
@@ -3871,10 +3874,10 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
 
-  '@commet/node@0.6.0(typescript@5.9.3)':
+  '@commet/node@0.6.1(typescript@5.9.3)':
     dependencies:
       typescript: 5.9.3
-      zod: 3.24.2
+      zod: 3.25.76
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -7018,5 +7021,7 @@ snapshots:
   yn@3.1.1: {}
 
   zod@3.24.2: {}
+
+  zod@3.25.76: {}
 
   zod@4.1.12: {}
