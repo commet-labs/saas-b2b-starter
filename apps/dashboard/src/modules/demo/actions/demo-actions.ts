@@ -131,7 +131,7 @@ export const createDemoOrganizations = withUser<ActionState>(
       }
 
       // Revalidate the demo page to show new organizations
-      revalidatePath("/demo");
+      revalidatePath("/dashboard");
 
       return {
         success: true,

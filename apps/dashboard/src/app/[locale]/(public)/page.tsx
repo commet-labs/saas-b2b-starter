@@ -22,7 +22,7 @@ export default async function LandingPage() {
       );
 
       if (activeOrganization) {
-        redirect("/demo");
+        redirect("/dashboard");
       }
     }
 
@@ -41,7 +41,7 @@ export default async function LandingPage() {
             organizationId: firstOrg.id,
           },
         });
-        redirect("/demo");
+        redirect("/dashboard");
       }
     }
 
