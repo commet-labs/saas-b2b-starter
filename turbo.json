@@ -6,7 +6,7 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
-    "dashboard#build": {
+    "@repo/dashboard#build": {
       "dependsOn": ["@repo/database#db:migrate"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
@@ -26,10 +26,6 @@
         "COMMET_API_KEY",
         "BLOB_READ_WRITE_TOKEN"
       ]
-    },
-    "@repo/dashboard#build": {
-      "dependsOn": [],
-      "outputs": [".react-email/**"]
     },
     "@repo/database#db:migrate": {
       "cache": false,
