@@ -9,17 +9,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/card";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const { organizations } = await getDemoOrganizations();
 
   return (
     <div className="container mx-auto p-6 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Billing Dashboard</h1>
-        <p className="text-muted-foreground mt-2">
-          Manage customers, seats, and usage events for your organization
-        </p>
+      <div className="flex justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Billing Dashboard</h1>
+          <p className="text-muted-foreground mt-2">
+            Manage customers, seats, and usage events for your organization
+          </p>
+        </div>
+        <Link
+          href="https://docs.commet.co/docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline text-lg font-medium"
+        >
+          Docs
+        </Link>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
