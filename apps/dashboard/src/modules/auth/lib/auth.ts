@@ -2,7 +2,7 @@ import { env } from "@/env";
 import { db } from "@repo/database/connection";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { magicLink, organization } from "better-auth/plugins";
+import { organization } from "better-auth/plugins";
 
 const baseURL: string | undefined =
   env.VERCEL === "1"
@@ -19,14 +19,9 @@ export const auth = betterAuth({
   }),
   baseURL: baseURL,
   emailAndPassword: {
-    enabled: false,
+    enabled: true,
   },
   plugins: [
-    magicLink({
-      async sendMagicLink(data) {
-        console.log("Sending magic link email:", data);
-      },
-    }),
     organization({
       async sendInvitationEmail(data) {
         try {

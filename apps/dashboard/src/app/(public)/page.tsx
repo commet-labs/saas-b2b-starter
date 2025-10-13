@@ -46,7 +46,7 @@ export default async function LandingPage() {
     }
 
     // If user has no organizations, redirect to create one
-    redirect("/create-organization");
+    redirect("/dashboard");
   }
 
   // User is not authenticated, redirect to login

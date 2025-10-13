@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatedLoginForm } from "./animated-login-form";
 import { LoginHeader } from "./login-header";
 
@@ -16,11 +17,23 @@ export function LoginForm() {
       <LoginHeader />
 
       <AnimatedLoginForm onError={handleError} />
+
       {error && (
         <div className="text-sm text-center p-3 rounded-md text-red-600 bg-red-50 border border-red-200">
           {error}
         </div>
       )}
+
+      {/* Link to Signup */}
+      <div className="text-center text-sm">
+        <span className="text-muted-foreground">¿No tienes cuenta? </span>
+        <Link
+          href="/signup"
+          className="font-medium text-primary hover:underline"
+        >
+          Regístrate
+        </Link>
+      </div>
     </div>
   );
 }

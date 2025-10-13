@@ -8,13 +8,15 @@ import { Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-interface AnimatedLoginFormProps {
+interface SignupFormProps {
   onError: (error: string | null) => void;
 }
 
-export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
+export const SignupForm = ({ onError }: SignupFormProps) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -22,27 +24,40 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!name || !email || !password || !confirmPassword) return;
+
+    // Validate password match
+    if (password !== confirmPassword) {
+      onError("Las contraseñas no coinciden");
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 8) {
+      onError("La contraseña debe tener al menos 8 caracteres");
+      return;
+    }
 
     setIsLoading(true);
     onError(null);
 
     try {
-      const result = await authClient.signIn.email({
+      const result = await authClient.signUp.email({
         email,
         password,
+        name,
         callbackURL: redirectTo,
       });
 
       if (result.error) {
-        onError(result.error.message || "Error al iniciar sesión");
+        onError(result.error.message || "Error al crear la cuenta");
       } else {
-        // Redirect after successful login
+        // Redirect after successful signup
         router.push(redirectTo);
       }
     } catch (error) {
-      onError("Error al iniciar sesión. Verifica tus credenciales.");
-      console.error("Login error:", error);
+      onError("Error al crear la cuenta. Intenta de nuevo.");
+      console.error("Signup error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -57,6 +72,22 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
         className="space-y-4"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name Input */}
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium">
+              Nombre
+            </label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Tu nombre"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isLoading}
+              required
+            />
+          </div>
+
           {/* Email Input */}
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium">
@@ -86,6 +117,24 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
               required
+              minLength={8}
+            />
+          </div>
+
+          {/* Confirm Password Input */}
+          <div className="space-y-2">
+            <label htmlFor="confirm-password" className="text-sm font-medium">
+              Confirmar contraseña
+            </label>
+            <Input
+              id="confirm-password"
+              type="password"
+              placeholder="••••••••"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={isLoading}
+              required
+              minLength={8}
             />
           </div>
 
@@ -93,15 +142,17 @@ export const AnimatedLoginForm = ({ onError }: AnimatedLoginFormProps) => {
           <Button
             type="submit"
             className="w-full"
-            disabled={!email || !password || isLoading}
+            disabled={
+              !name || !email || !password || !confirmPassword || isLoading
+            }
           >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Iniciando sesión...
+                Creando cuenta...
               </>
             ) : (
-              "Iniciar sesión"
+              "Crear cuenta"
             )}
           </Button>
         </form>
