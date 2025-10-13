@@ -53,10 +53,10 @@ export function UsageEventsForm({ organizations }: UsageEventsFormProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="usage-org-select">Organization</Label>
+        <Label htmlFor="usage-org-select">Customer</Label>
         <Select value={selectedOrg} onValueChange={setSelectedOrg}>
           <SelectTrigger id="usage-org-select" className="w-full">
-            <SelectValue placeholder="Select organization" />
+            <SelectValue placeholder="Select customer" />
           </SelectTrigger>
           <SelectContent>
             {organizations.map((org) => (

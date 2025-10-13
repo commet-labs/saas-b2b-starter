@@ -54,10 +54,10 @@ export function SeatEventsForm({ organizations }: SeatEventsFormProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="org-select">Organization</Label>
+        <Label htmlFor="org-select">Customer</Label>
         <Select value={selectedOrg} onValueChange={setSelectedOrg}>
           <SelectTrigger id="org-select" className="w-full">
-            <SelectValue placeholder="Select organization" />
+            <SelectValue placeholder="Select customer" />
           </SelectTrigger>
           <SelectContent>
             {organizations.map((org) => (

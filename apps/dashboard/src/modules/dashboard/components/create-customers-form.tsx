@@ -2,8 +2,6 @@
 
 import { useActionState } from "react";
 import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
 import { Loader2 } from "lucide-react";
 import { createDemoOrganizations } from "../actions/demo-actions";
 import type { ActionState } from "@/modules/shared/lib/middleware-action";
@@ -22,24 +20,14 @@ export function CreateCustomersForm() {
   return (
     <div className="space-y-4">
       <form action={formAction} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="count">Number of Customers</Label>
-          <Input
-            id="count"
-            name="count"
-            type="number"
-            min="1"
-            max="100"
-            defaultValue="1"
-            disabled={isPending}
-          />
-        </div>
+        <input id="count" name="count" type="hidden" defaultValue="1" />
 
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-col gap-2">
           <Button
             type="submit"
             disabled={isPending}
             size="sm"
+            variant="outline"
             onClick={(e) => {
               const form = e.currentTarget.form;
               if (form) {
@@ -94,17 +82,6 @@ export function CreateCustomersForm() {
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : null}
             Create 50
-          </Button>
-          <Button
-            type="submit"
-            disabled={isPending}
-            variant="secondary"
-            size="sm"
-          >
-            {isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            ) : null}
-            Create Custom
           </Button>
         </div>
 
