@@ -10,7 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@commet/node": "0.6.1",
+    "@commet/node": "0.8.0",
     "@repo/database": "workspace:*",
     "@repo/ui": "workspace:*",
     "@t3-oss/env-core": "0.13.8",
